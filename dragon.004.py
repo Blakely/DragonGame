@@ -7,13 +7,31 @@ File	: 	dragon.py
 Purpose	:	A very basic (but easily scalable) 3-level decision making game.
 '''
 
-paths = [] #possible paths in the game
-outcomes = [] #possible end-of-paths in the game
+paths = [] #possible paths in the current game
+outcomes = [] #possible end-of-paths in the current game
 currPath="" #the current path string
-pathMap = None #the map for the path
+pathMap = None #the map (dictionary/psuedo-binary tree) for the path for the current game
 level=0 #current level
 
 maxLevel=3 #the max level
+
+#all the possible paths to choose from in the game
+resetPath = ["There is a fork in the path.> Left or right (0 or 1)?",
+			"A large tree appears before you.> Do you go around it, or over it (0 or 1)?",
+			"The path comes to an end at an elevator.> Do you go up or down (0 or 1)?",
+			"A small infant comes between you and your goal.> Do you punch it, or kick it (0 or 1)?",
+			"You are confronted with a choice - 0 or 1?",
+			"You have an itch on your foot.> Intense. > Do you scratch it, or continue on (0 or 1)?"]
+
+#all the possible outcomes to end up with in the game
+resetOutcome = [">ANND you have a Heart attack from the suspense.",
+				"You walk a bit further...> But you are hit by a sudden epiphany that dictates you spend the rest of your life avoiding caves.> You decide to leave. > Game Over.",
+				"EARTHQUAKE!!> You die.> Game Over.",
+				"You hit a dead end, and your evil half twin has you unexpectedly cornered.> He kills you with a small blunt rock.> Game Over.",
+				"A wild Pikachu appears.> A pokemon battle ensues!> ... > Why did you come here again? > You leave.> Game Over.",
+				"Apparently you were being chased by Zombies this whole time.> They catch up to you and eat you.> Game Over.",
+				"You stumble upon a dragons lair.> DRAGON BATTLE!> ...the dragon overpowers you in the end.> Game Over",
+				"You see a shiny glimmer at the end of the tunnel.> You run towards it and begin to realize that it's a treasure chest with a small, fire-breathing newt sitting atop it.> You mush the newt under your boot and claim the treasure.> Congratulations, you win!"]
 
 #splits a given string based on a delimiter into a list and prints each string in the list at a set interval
 #params: string - the string to split & print
@@ -84,10 +102,16 @@ def getChoice():
 	
 	#keep asking for input until user gives valid input
 	while (not choice in validInput):
-		choice=raw_input()
+		if(not choice): #if the user didn't make a choice (yet?), get their input
+			choice=raw_input()
+		
+		else: #if the user has already made a choice, tell them it was invalid and get it again
+			print("Invalid input. Choose 0 or 1:")
+			choice=raw_input()
 		
 	return choice 
 
+#the main game loop. allows the user to choose a path and recurses until the final level is reached
 def game():
 	global pathMap,currPath,level
 	
@@ -105,26 +129,8 @@ def game():
 
 #the main method - starts the program and contains the replay functionality for the game
 def main():
-	global pathMap,currPath,level,paths,outcomes
-	
-	#all the possible paths to choose from in the game
-	resetPath = ["There is a fork in the path.> Left or right (0 or 1)?",
-				"A large tree appears before you.> Do you go around it, or over it (0 or 1)?",
-				"The path comes to an end at an elevator.> Do you go up or down (0 or 1)?",
-				"A small infant comes between you and your goal.> Do you punch it, or kick it (0 or 1)?",
-				"You are confronted with a choice - 0 or 1?",
-				"You have an itch on your foot.> Intense. > Do you scratch it, or continue on (0 or 1)?"]
-	
-	#all the possible outcomes to end up with in the game
-	resetOutcome = [">ANND you have a Heart attack from the suspense.",
-					"You walk a bit further...> But you are hit by a sudden epiphany that dictates you spend the rest of your life avoiding caves.> You decide to leave. > Game Over.",
-					"EARTHQUAKE!!> You die.> Game Over.",
-					"You hit a dead end, and your evil half twin has you unexpectedly cornered.> He kills you with a small blunt rock.> Game Over.",
-					"A wild Pikachu appears.> A pokemon battle ensues!> ... > Why did you come here again? > You leave.> Game Over.",
-					"Apparently you were being chased by Zombies this whole time.> They catch up to you and eat you.> Game Over.",
-					"You stumble upon a dragons lair.> DRAGON BATTLE!> ...the dragon overpowers you in the end.> Game Over",
-					"You see a shiny glimmer at the end of the tunnel.> You run towards it and begin to realize that it's a treasure chest with a small, fire-breathing newt sitting atop it.> You mush the newt under your boot and claim the treasure.> Congratulations, you win!"]
-	
+	global pathMap,currPath,level,paths,outcomes,resetPath,resetOutcome
+
 	playAgain = 'yes'
 	
 	#as long as the user selects yes (or 'y'), replay the game
