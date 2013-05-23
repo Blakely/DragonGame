@@ -14,6 +14,7 @@ pathMap = None #the map (dictionary/psuedo-binary tree) for the path for the cur
 level=0 #current level
 
 maxLevel=3 #the max level
+timeDelim=">" #delimiter to split text on for the timed print
 
 #all the possible paths to choose from in the game
 resetPath = ["There is a fork in the path.> Left or right (0 or 1)?",
@@ -36,9 +37,10 @@ resetOutcome = [">ANND you have a Heart attack from the suspense.",
 #splits a given string based on a delimiter into a list and prints each string in the list at a set interval
 #params: string - the string to split & print
 def timedPrint(msg):
-	delim=">" #delimited to split the msg on
+	global timeDelim
+	
 	delay=1 #delay in seconds to iterate through the msg
-	msgList = str(msg).split(delim) #split the msg into a list
+	msgList = str(msg).split(timeDelim) #split the msg into a list
 	
 	#for each message in the list, print it and pause for the length of the delay
 	for timeMsg in msgList:
