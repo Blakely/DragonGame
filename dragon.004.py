@@ -39,7 +39,7 @@ resetOutcome = [">ANND you have a Heart attack from the suspense.",
 def timedPrint(msg):
 	global timeDelim
 	
-	delay=1 #delay in seconds to iterate through the msg
+	delay=2 #delay in seconds to iterate through the msg
 	msgList = str(msg).split(timeDelim) #split the msg into a list
 	
 	#for each message in the list, print it and pause for the length of the delay
@@ -56,14 +56,14 @@ def displayIntro():
 
 #gets a random path index from the remaining available paths
 #returns: random path index
-def randomPath():
+def randPath():
 	global paths
 	randMax = len(paths)
 	return random.randint(0,randMax-1)
 
 #gets a random outcome index from the remaining available outcomes
 #returns: random outcome index
-def randomOutcome():
+def randOutcome():
 	global outcomes
 	randMax = len(outcomes)
 	return random.randint(0,randMax-1)
@@ -81,25 +81,24 @@ def randomizeCaves():
 			randomPath[00|01|10|11] is the second decision level
 			etc..
 	'''		
-	
 	#randomize first decision level
 	for x in range(0,2):
-		randomPath[str(x)]=paths.pop(randomPath())
+		randomPath[str(x)]=paths.pop(randPath())
 		
 		#randomize second decision level
 		for i in range(0,2):
-			randomPath[str(x)+str(i)]=paths.pop(randomPath())
+			randomPath[str(x)+str(i)]=paths.pop(randPath())
 			
 			#randomize third decision level (outcomes)
 			for b in range(0,2):
-				randomPath[str(x)+str(i)+str(b)]=outcomes.pop(randomOutcome())
+				randomPath[str(x)+str(i)+str(b)]=outcomes.pop(randOutcome())
 	
 	return randomPath
 		
 #gets a choice (one of the valid inputs) from the user
 #returns: the choice the user inputted
 def getChoice():
-	validInputs = ("0","1") #valid inputs 
+	validInput = ("0","1") #valid inputs 
 	choice=""
 	
 	#keep asking for input until user gives valid input
@@ -138,8 +137,8 @@ def main():
 	#as long as the user selects yes (or 'y'), replay the game
 	while playAgain == 'yes' or playAgain == 'y':
 		#reset the games possible path/outcome variables (copy the lists)
-		paths=list(resetPath) 
-		outcomes=list(resetOutcome)
+		paths=resetPath[:]
+		outcomes=resetOutcome[:]
 		
 		#create the path map (random paths to random outcomes)
 		pathMap=randomizeCaves()
